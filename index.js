@@ -1,29 +1,12 @@
 const fs = require('fs');
-const ImageGenerator = require('./class/ImageGenerator');
+const ImageCreatorByContent = require('./class/ImageCreatorByContent');
+const ImageResizer = require('./class/ImageResizer');
 
-fs.writeFileSync('./img/imagem-branco-preto.pbm', ImageGenerator.getImage(ImageGenerator.typeASCIIP1, 400, 400), (err) => {
-    if (err) throw err;
-  console.log('O arquivo foi criado!');
-});
+const image = ImageCreatorByContent.getImage(fs.readFileSync('./img/EntradaEscalaCinza.pgm', 'utf-8'));
 
-fs.writeFileSync('./img/imagem-cinza.pgm', ImageGenerator.getImage(ImageGenerator.typeASCIIP2, 400, 400, 16), (err) => {
-  if (err) throw err;
-console.log('O arquivo foi criado!');
-});
-
-fs.writeFileSync('./img/imagem-cinza.pgm', ImageGenerator.getImage(ImageGenerator.typeASCIIP2, 400, 400, 16), (err) => {
-  if (err) throw err;
-console.log('O arquivo foi criado!');
-});
-
-fs.writeFileSync('./img/imagem-colorida-400x400.pgm', ImageGenerator.getImage(ImageGenerator.typeASCIIP3, 400, 400, 16), (err) => {
-  if (err) throw err;
-console.log('O arquivo foi criado!');
-});
-
-fs.writeFileSync('./img/imagem-colorida-1000x1000.pgm', ImageGenerator.getImage(ImageGenerator.typeASCIIP3, 1000, 1000, 16), (err) => {
-  if (err) throw err;
-console.log('O arquivo foi criado!');
-});
-
-// console.log(gerarImagemP1(400, 400));
+fs.writeFileSync('./img/redimensionamento/10x-menor.pgm', ImageResizer.resize(image, 80, 80).getContent());
+fs.writeFileSync('./img/redimensionamento/480x320.pgm', ImageResizer.resize(image, 480, 320).getContent());
+fs.writeFileSync('./img/redimensionamento/1280x720.pgm', ImageResizer.resize(image, 1280, 720).getContent());
+fs.writeFileSync('./img/redimensionamento/1920x1080.pgm', ImageResizer.resize(image, 1920, 1080).getContent());
+fs.writeFileSync('./img/redimensionamento/3840x2160.pgm', ImageResizer.resize(image, 3840, 2160).getContent());
+fs.writeFileSync('./img/redimensionamento/7680x4320.pgm', ImageResizer.resize(image, 7680, 4320).getContent());
