@@ -1,13 +1,13 @@
 const Image = require("./Image");
 
-module.exports = class ImageIntensityChanger {
+module.exports = class ImageCreatorByContent {
 
     /**
      * @param {Image} image
      * @param {Number} bits
      * @returns {Image}
      */
-    static change(image, bits) {
+    static convert(image, bits) {
         const intensity = (bits ** 2) - 1;
 
         const pixelMatriz = this.#changePixelMatriz(
@@ -26,6 +26,7 @@ module.exports = class ImageIntensityChanger {
 
     /**
      * @param {Array<Array<Array<Number>>>} pixelMatriz
+     * @param {Number} multiplier 
      * @returns {Array<Array<Array<Number>>>}
      */
     static #changePixelMatriz(pixelMatriz, multiplier) {

@@ -1,8 +1,11 @@
 const fs = require('fs');
 const ImageCreatorByContent = require('./class/ImageCreatorByContent');
-const ImageResizer = require('./class/ImageResizer');
-const ImageIntensityChanger = require('./class/ImageIntensityChanger');
+const ImageBitConverter = require('./class/ImageBitConverter');
+const ImageIntensityManipulator = require('./class/ImageIntensityManipulator');
 
 const image = ImageCreatorByContent.getImage(fs.readFileSync('./img/EntradaEscalaCinza.pgm', 'utf-8'));
 
-fs.writeFileSync('./img/bit-change/saida-5-bits.pgm', ImageIntensityChanger.change(image, 5).getContent());
+fs.writeFileSync(
+    './img/intensity-manipulator/ganho-20.pgm', 
+    ImageIntensityManipulator.increase(ImageBitConverter.convert(image, 5), 20).getContent()
+);
