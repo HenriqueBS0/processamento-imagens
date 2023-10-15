@@ -96,6 +96,10 @@ class Image {
         return this.#intensity;
     }
 
+    getBits() {
+        return Math.log2(this.getIntensity() + 1);
+    }
+
     getContent() {
         return this.#content;
     }
