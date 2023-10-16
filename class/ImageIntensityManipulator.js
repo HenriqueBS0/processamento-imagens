@@ -39,6 +39,7 @@ module.exports = class ImageIntensityManipulator {
 
     /**
      * @param {Array<Array<Array<Number>>>} pixelMatriz
+     * @param {Number} multiplier 
      * @param {Number} maximumValue 
      * @returns {Array<Array<Array<Number>>>}
      */
