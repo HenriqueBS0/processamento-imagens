@@ -57,7 +57,7 @@ class Image {
 
         let indexPixel = 4;
 
-        const valuesPerPixel = ImageType.getValuesPerPixel(this.getType);
+        const valuesPerPixel = ImageType.getValuesPerPixel(this.getType());
 
         for (let line = 1; line <= this.getHeight(); line++) {
             const pixelsLine = [];

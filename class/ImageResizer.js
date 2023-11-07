@@ -4,9 +4,9 @@ const repeat = require('./helpers/repeat');
 class ImageResizer {
 
     /**
-     * @param {Image} image 
+     * @param {Image} image
      * @param {Number} width
-     * @param {Number} height 
+     * @param {Number} height
      * @returns {Image}
      */
     static resize(image, width, height) {
@@ -23,10 +23,10 @@ class ImageResizer {
     }
 
     /**
-     * @param {Array<Array<Array<Number>>>} matriz 
-     * @param {Number} currentWidth 
-     * @param {Number} currentHeight 
-     * @param {Number} targetWidth 
+     * @param {Array<Array<Array<Number>>>} matriz
+     * @param {Number} currentWidth
+     * @param {Number} currentHeight
+     * @param {Number} targetWidth
      * @param {Number} targetHeight
      * @returns {Array<Array<Array<<Number>>>}
      */
@@ -45,7 +45,7 @@ class ImageResizer {
 
     /**
      * @param {Array<Array<Number>>} array
-     * @param {Number} length 
+     * @param {Number} length
      * @returns {Array<Array<Number>>}
      */
     static #reduceArray(array, length) {
@@ -53,7 +53,7 @@ class ImageResizer {
         const reduceByTheAveragePixel = array => {
 
             const mediumPixel = Math.floor(array.length / 2) - 1;
-            
+
             array[mediumPixel] = this.#pixelAverage([array[mediumPixel], array[mediumPixel + 1]]);
             array.splice(mediumPixel + 1, 1);
 
@@ -106,7 +106,7 @@ class ImageResizer {
 
     /**
      * @param {Array<Array<Array<Number>>>} array
-     * @param {Number} proportionToOne 
+     * @param {Number} proportionToOne
      * @returns {Array<Array<Array<<Number>>>}
      */
     static #enlarge(matriz, currentWidth, currentHeight, targetWidth, targetHeight) {
@@ -125,7 +125,7 @@ class ImageResizer {
 
     /**
      * @param {Array<Array<Number>>} array
-     * @param {Number} targetLength 
+     * @param {Number} targetLength
      * @returns {Array<Array<Number>>}
      */
     static #enlargeArray(array, targetLength) {
@@ -144,8 +144,8 @@ class ImageResizer {
     }
 
     /**
-     * @param {Array<Array<Number>>} array 
-     * @returns {Array<Array<Number>>} 
+     * @param {Array<Array<Number>>} array
+     * @returns {Array<Array<Number>>}
      */
     static #insertPixelsInAllSpaces(array) {
         const newArray = [];
@@ -161,8 +161,8 @@ class ImageResizer {
     }
 
     /**
-     * @param {Array<Array<Number>>} array 
-     * @returns {Array<Array<Number>>} 
+     * @param {Array<Array<Number>>} array
+     * @returns {Array<Array<Number>>}
      */
     static #insertPixelsBetweenSection(array, pixelsToInsert) {
 
@@ -204,7 +204,7 @@ class ImageResizer {
 
     /**
      * @param {Array<Array<Number>>} pixels
-     * @returns {Array<Number>}  
+     * @returns {Array<Number>}
      */
     static #pixelAverage(pixels) {
         return pixels.reduce((pixelValue, currentPixelValue) => {

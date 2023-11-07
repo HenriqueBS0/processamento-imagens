@@ -22,7 +22,7 @@ class ImageCreatorByContent {
      * @returns {Array<String>}
      */
     static #converToArray(content) {
-        const contentWithoutBreaks = content.replace(/\r?\n|\r/g, ' ');
+        const contentWithoutBreaks = content.replace(/#.*(\r?\n|\r|$)/g, ' ').replace(/\r?\n|\r/g, ' ');
         const contentArray = contentWithoutBreaks.split(' ').filter(elemento => elemento !== '');
         return this.#explainsIntensity(contentArray);
     }

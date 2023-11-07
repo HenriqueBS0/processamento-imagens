@@ -1,6 +1,7 @@
 const Image = require("./Image");
+const ImageMatrizPixelModifier = require("./ImageMatrizPixelModifier");
 
-module.exports = class ImageNegativeConverter {
+class ImageNegativeConverter {
     /**
      * @param {Image} image
      */
@@ -10,20 +11,12 @@ module.exports = class ImageNegativeConverter {
             image.getWidth(),
             image.getHeight(),
             image.getIntensity(),
-            this.#changePixelMatriz(image.getPixelMatriz(), image.getIntensity())
+            ImageMatrizPixelModifier.modify(
+                image.getPixelMatriz(),
+                pixelValues => pixelValues.map(value => image.getIntensity() - value)
+            )
         );
     }
-
-    /**
-     * @param {Array<Array<Array<Number>>>} pixelMatriz
-     * @param {Number} intensity
-     * @returns {Array<Array<Array<Number>>>}
-     */
-    static #changePixelMatriz(pixelMatriz, intensity) {
-        return pixelMatriz.map(line => {
-            return line.map(pixelValues => {
-                return pixelValues.map(value => intensity - value);
-            });
-        });
-    }
 }
+
+module.exports = ImageNegativeConverter;

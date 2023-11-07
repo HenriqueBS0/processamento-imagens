@@ -1,6 +1,7 @@
 const Image = require("./Image");
+const ImageMatrizPixelModifier = require("./ImageMatrizPixelModifier");
 
-module.exports = class ImageIntensityManipulator {
+class ImageIntensityManipulator {
 
     /** 
      * @param {Image} image 
@@ -24,30 +25,22 @@ module.exports = class ImageIntensityManipulator {
      * @param {Number} multiplier 
      */
     static #change(image, multiplier) {
+        const pixelMatriz = ImageMatrizPixelModifier.modify(image.getPixelMatriz(), pixelValues => {
+            return pixelValues.map(value => {
+                return Math.round(value * multiplier) > image.getIntensity()
+                    ? image.getIntensity()
+                    : Math.round(value * multiplier)
+            });
+        });
+
         return Image.buildFromData(
             image.getType(),
             image.getWidth(),
             image.getHeight(),
             image.getIntensity(),
-            this.#changePixelMatriz(
-                image.getPixelMatriz(),
-                multiplier,
-                image.getIntensity()
-            )
+            pixelMatriz
         );
     }
-
-    /**
-     * @param {Array<Array<Array<Number>>>} pixelMatriz
-     * @param {Number} multiplier 
-     * @param {Number} maximumValue 
-     * @returns {Array<Array<Array<Number>>>}
-     */
-    static #changePixelMatriz(pixelMatriz, multiplier, maximumValue) {
-        return pixelMatriz.map(line => {
-            return line.map(pixelValues => {
-                return pixelValues.map(value => Math.round(value * multiplier) > maximumValue ? maximumValue : Math.round(value * multiplier));
-            });
-        });
-    }
 }
+
+module.exports = ImageIntensityManipulator;

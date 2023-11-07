@@ -1,6 +1,7 @@
 const Image = require("./Image");
+const ImageMatrizPixelModifier = require("./ImageMatrizPixelModifier");
 
-module.exports = class ImageCreatorByContent {
+class ImageBitConverter {
 
     /**
      * @param {Image} image
@@ -10,10 +11,9 @@ module.exports = class ImageCreatorByContent {
     static convert(image, bits) {
         const intensity = (bits ** 2) - 1;
 
-        const pixelMatriz = this.#changePixelMatriz(
-            image.getPixelMatriz(),
-            intensity / image.getIntensity()
-        );
+        const pixelMatriz = ImageMatrizPixelModifier.modify(image.getPixelMatriz(), pixelValues => {
+            return pixelValues.map(value => Math.round(value * (intensity / image.getIntensity())));
+        });
 
         return Image.buildFromData(
             image.getType(),
@@ -23,17 +23,6 @@ module.exports = class ImageCreatorByContent {
             pixelMatriz
         );
     }
-
-    /**
-     * @param {Array<Array<Array<Number>>>} pixelMatriz
-     * @param {Number} multiplier 
-     * @returns {Array<Array<Array<Number>>>}
-     */
-    static #changePixelMatriz(pixelMatriz, multiplier) {
-        return pixelMatriz.map(line => {
-            return line.map(pixelValues => {
-                return pixelValues.map(value => Math.round(value * multiplier));
-            });
-        });
-    }
 }
+
+module.exports = ImageBitConverter;
