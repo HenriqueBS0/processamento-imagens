@@ -14,12 +14,12 @@ class ImageResizer {
         /**
          * @type {Array<Array<Array<Number>>>}
          */
-        let pixelMatriz = JSON.parse(JSON.stringify(image.getPixelMatriz()));
+        let pixelMatrix = JSON.parse(JSON.stringify(image.getPixelMatrix()));
 
-        pixelMatriz = this.#enlarge(pixelMatriz, image.getWidth(), image.getHeight(), width, height);
-        pixelMatriz = this.#reduce(pixelMatriz, image.getWidth(), image.getHeight(), width, height);
+        pixelMatrix = this.#enlarge(pixelMatrix, image.getWidth(), image.getHeight(), width, height);
+        pixelMatrix = this.#reduce(pixelMatrix, image.getWidth(), image.getHeight(), width, height);
 
-        return Image.buildFromData(image.getType(), width, height, image.getIntensity(), pixelMatriz);
+        return Image.buildFromData(image.getType(), width, height, image.getIntensity(), pixelMatrix);
     }
 
     /**

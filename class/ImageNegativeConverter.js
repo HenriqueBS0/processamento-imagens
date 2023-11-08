@@ -12,7 +12,7 @@ class ImageNegativeConverter {
             image.getHeight(),
             image.getIntensity(),
             ImageMatrizPixelModifier.modify(
-                image.getPixelMatriz(),
+                image.getPixelMatrix(),
                 pixelValues => pixelValues.map(value => image.getIntensity() - value)
             )
         );

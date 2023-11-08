@@ -11,7 +11,7 @@ class ImageBitConverter {
     static convert(image, bits) {
         const intensity = (bits ** 2) - 1;
 
-        const pixelMatriz = ImageMatrizPixelModifier.modify(image.getPixelMatriz(), pixelValues => {
+        const pixelMatrix = ImageMatrizPixelModifier.modify(image.getPixelMatrix(), pixelValues => {
             return pixelValues.map(value => Math.round(value * (intensity / image.getIntensity())));
         });
 
@@ -20,7 +20,7 @@ class ImageBitConverter {
             image.getWidth(),
             image.getHeight(),
             intensity,
-            pixelMatriz
+            pixelMatrix
         );
     }
 }

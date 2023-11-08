@@ -6,7 +6,7 @@ class Image {
     #height;
     #intensity;
     #content;
-    #pixelMatriz;
+    #pixelMatrix;
 
     /**
      * @param {string} type 
@@ -43,17 +43,17 @@ class Image {
 
     setContent(content) {
         this.#content = content;
-        this.#setPixelMatriz(content);
+        this.#setPixelMatrix(content);
         return this;
     }
 
     /**
      * @param {String} content 
      */
-    #setPixelMatriz(content) {
+    #setPixelMatrix(content) {
         const contentArray = content.split('\n');
 
-        const pixelMatriz = [];
+        const pixelMatrix = [];
 
         let indexPixel = 4;
 
@@ -74,10 +74,10 @@ class Image {
                 pixelsLine.push(valuesPixel);
             }
 
-            pixelMatriz.push(pixelsLine);
+            pixelMatrix.push(pixelsLine);
         }
 
-        this.#pixelMatriz = pixelMatriz;
+        this.#pixelMatrix = pixelMatrix;
     }
 
     getType() {
@@ -107,8 +107,8 @@ class Image {
     /**
      * @returns {Array<Array<Array<Number>>>}
      */
-    getPixelMatriz() {
-        return this.#pixelMatriz;
+    getPixelMatrix() {
+        return this.#pixelMatrix;
     }
 
     /**
@@ -117,16 +117,16 @@ class Image {
      * @param {Number} width 
      * @param {Number} height 
      * @param {Number} intensity 
-     * @param {Array<Array<Array<Number>>>} pixelMatriz 
+     * @param {Array<Array<Array<Number>>>} pixelMatrix 
      */
-    static buildFromData(type, width, height, intensity, pixelMatriz) {
+    static buildFromData(type, width, height, intensity, pixelMatrix) {
         const content = [];
         content.push(type);
         content.push(width);
         content.push(height);
         content.push(intensity);
         
-        pixelMatriz.forEach(line => {
+        pixelMatrix.forEach(line => {
             line.forEach(pixelsValues => {
                 pixelsValues.forEach(value => {
                     content.push(value);

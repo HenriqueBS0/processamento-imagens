@@ -25,7 +25,7 @@ class ImageIntensityManipulator {
      * @param {Number} multiplier 
      */
     static #change(image, multiplier) {
-        const pixelMatriz = ImageMatrizPixelModifier.modify(image.getPixelMatriz(), pixelValues => {
+        const pixelMatrix = ImageMatrizPixelModifier.modify(image.getPixelMatrix(), pixelValues => {
             return pixelValues.map(value => {
                 return Math.round(value * multiplier) > image.getIntensity()
                     ? image.getIntensity()
@@ -38,7 +38,7 @@ class ImageIntensityManipulator {
             image.getWidth(),
             image.getHeight(),
             image.getIntensity(),
-            pixelMatriz
+            pixelMatrix
         );
     }
 }

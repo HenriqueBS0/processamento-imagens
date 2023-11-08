@@ -10,7 +10,7 @@ class ImageFormatConverter {
      * @param {Number} threshold
      */
     static toPBM(image, threshold) {
-        const pixelMatriz = ImageMatrizPixelModifier.modify(image.getPixelMatriz(), pixelValues => {
+        const pixelMatrix = ImageMatrizPixelModifier.modify(image.getPixelMatrix(), pixelValues => {
             const average = Math.round(pixelValues.reduce((a, b) => a + b) / pixelValues.length);
             return [average >= threshold ? 0 : 1];
         });
@@ -20,7 +20,7 @@ class ImageFormatConverter {
             image.getWidth(),
             image.getHeight(),
             1,
-            pixelMatriz
+            pixelMatrix
         );
     }
 
@@ -34,7 +34,7 @@ class ImageFormatConverter {
             image.getWidth(),
             image.getHeight(),
             image.getIntensity(),
-            ImageMatrizPixelModifier.average(image.getPixelMatriz())
+            ImageMatrizPixelModifier.average(image.getPixelMatrix())
         ), bits);
     }
 
@@ -44,9 +44,9 @@ class ImageFormatConverter {
      */
     static toPPM(image, bits) {
 
-        const pixelMatriz = ImageType.PPM === image.getType()
-            ? image.getPixelMatriz()
-            : image.getPixelMatriz().map(pixelValues => [
+        const pixelMatrix = ImageType.PPM === image.getType()
+            ? image.getPixelMatrix()
+            : image.getPixelMatrix().map(pixelValues => [
                 pixelValues[0],
                 pixelValues[0],
                 pixelValues[0]
@@ -57,7 +57,7 @@ class ImageFormatConverter {
             image.getWidth(),
             image.getHeight(),
             image.getIntensity(),
-            pixelMatriz
+            pixelMatrix
         ), bits);
     }
 }
