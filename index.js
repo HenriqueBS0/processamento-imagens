@@ -7,4 +7,4 @@ const image = ImageCreatorByContent.getImage(fs.readFileSync('./img/Fig4.ppm', '
 
 fs.writeFileSync('./img/compression/compress.rle', ImageCompression.compress(image));
 
-console.log(ImageCompression.decompress(fs.readFileSync('./img/compression/compress.rle', 'utf-8')))
+// console.log(ImageCompression.decompress(fs.readFileSync('./img/compression/compress.rle', 'utf-8')))

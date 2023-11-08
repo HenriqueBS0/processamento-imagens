@@ -12,7 +12,7 @@ class ImageCompression {
         const compressedArray = compressedString.split(' ');
         const width = parseInt(compressedArray[0]);
         const height = parseInt(compressedArray[1]);
-        
+
         /**
          * @type {Array<String>}
          */
@@ -41,14 +41,14 @@ class ImageCompression {
         const extractArrayFromString = (inputString) => {
             const match = inputString.match(/\(([^)]+)\)/); // Encontra o que estiver entre parênteses
             return match[1].split(',').map(Number);
-          }
-          
+        }
+
 
         for (const value of compressedPixels) {
             remainingElements -= getFirstNumber(value);
             // const elements = getFirstNumber(value);
             // remainingElements -= elements;
-            
+
             // if(!colorChannels[currentColor][line]) {
             //     colorChannels[currentColor][line] = [];
             // }
@@ -84,67 +84,78 @@ class ImageCompression {
             linesCompress = linesCompress.concat(this.#compressLine(colorChannels.blue[line]));
         }
 
-        return [image.getWidth(), image.getHeight(), ...linesCompress].join(' ');
+        return [image.getWidth(), image.getHeight(), ...linesCompress].join(',');
     }
 
     /**
      * @param {Array<Number>} line 
      */
     static #compressLine(line) {
-        const lineCompress = [];
 
-        let equals = [];
-        let different = [];
+        const getSubsequences = line => {
 
-        for (const pixelValue of line) {
-            if(equals.length === 0 && different.length === 0) {
-                different.push(pixelValue);
-                continue;
-            }
+            const subsequences = [];
 
-            if(different.length && different[different.length - 1] === pixelValue) {
-                equals.push(different.pop(), pixelValue);
+            let bringingTogetherDifferent = true;
+            let subsequence = [];
 
-                if(different.length) {
-                    lineCompress.push(JSON.parse(JSON.stringify(different)));
+            for (const pixelValue of line) {
+
+                if (subsequence.length === 0) {
+                    subsequence.push(pixelValue);
+                    continue;
                 }
 
-                different = [];
-                continue;
-            }
-            
-            if(different.length) {
-                different.push(pixelValue);
-                continue;
+                if (subsequence.length === 1) {
+                    bringingTogetherDifferent = subsequence[0] !== pixelValue;
+                }
+
+                if (
+                    (bringingTogetherDifferent && subsequence.at(-1) !== pixelValue) ||
+                    (!bringingTogetherDifferent && subsequence.at(-1) === pixelValue)
+                ) {
+                    subsequence.push(pixelValue);
+                }
+                else {
+                    subsequences.push(JSON.parse(JSON.stringify(subsequence)));
+                    subsequence = [pixelValue];
+                }
             }
 
-            if(equals[equals.length - 1] === pixelValue) {
-                equals.push(pixelValue);
-                continue;
-            }
-
-            lineCompress.push(JSON.parse(JSON.stringify(equals)));
-            equals = [];
-            different.push(pixelValue);
+            subsequences.push(JSON.parse(JSON.stringify(subsequence)));
+            return subsequences;
         }
 
-        let a= lineCompress.map(elements => {
-            if(elements.length > 1 && elements[0] === elements[1]) {
-                return `${elements.length}(${elements[0]})`;
+        const divide127 = subsequences => {
+            const newSubsequences = [];
+
+            for (const subsequence of subsequences) {
+                if (subsequence.length <= 127) {
+                    newSubsequences.push(subsequence);
+                    continue;
+                }
+
+                while (subsequence.length > 127) {
+                    const newSubsequence = [];
+                    repeat(() => newSubsequence.push(subsequence.shift()), 127);
+                    newSubsequences.push(newSubsequence);
+                }
+
+                newSubsequences.push(subsequence);
+            }
+
+            return newSubsequences;
+        }
+
+        return divide127(getSubsequences(line)).map(subsequence => {
+            if (subsequence.length > 1 && subsequence[0] === subsequence[1]) {
+                return `${subsequence.length},${subsequence[0]}`;
             }
             else {
-                return `-${elements.length}(${elements.join(',')})`;
+                return `${-subsequence.length},${subsequence.join(',')}`;
             }
         });
 
-        const getFirstNumber = str => Number((str.match(/\d+/) || [0])[0]);
-
-        let s = a.reduce((a, e) => {
-            e = getFirstNumber(e);
-            a + e;
-        }, 0);
-        
-        return a;
     }
 }
 
