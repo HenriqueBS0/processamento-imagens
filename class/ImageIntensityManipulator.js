@@ -41,6 +41,43 @@ class ImageIntensityManipulator {
             pixelMatrix
         );
     }
+
+    /**
+     * @param {import("./Image").PixelMatrix} pixelMatrix 
+     * @returns {Number}
+     */
+    static getIntensityFromPixelMatrix(pixelMatrix) {
+        const nextBaseValue2 = number => {
+            let pow = 0;
+            while (Math.pow(2, pow) <= number) {
+                pow++;
+            }
+            return Math.pow(2, pow);
+        }
+
+
+        /**
+         * @param {import("./Image").PixelMatrix} pixelMatrix 
+         */
+        const getMaxValue = pixelMatrix => {
+            let max = 0;
+
+            pixelMatrix.forEach(line => {
+                line.forEach(pixelValues => {
+                    pixelValues.forEach(value => {
+                        if(value > max) {
+                            max = value;
+                        };
+                    })
+                })
+            });
+
+            return max;
+        }
+
+        return nextBaseValue2(getMaxValue(pixelMatrix));
+        
+    }
 }
 
 module.exports = ImageIntensityManipulator;

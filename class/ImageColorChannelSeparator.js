@@ -2,9 +2,9 @@ const Image = require("./Image");
 
 /**
  * @typedef {Object} ColorChannels
- * @property {Array<Array<number>>} red
- * @property {Array<Array<number>>} green
- * @property {Array<Array<number>>} blue
+ * @property {{import('./Image').PixelChannel}} red
+ * @property {{import('./Image').PixelChannel}} green
+ * @property {{import('./Image').PixelChannel}} blue
  */
 
 class ImageColorChannelSeparator {

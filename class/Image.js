@@ -1,5 +1,21 @@
 const ImageType = require("./ImageType");
 
+/**
+ * @typedef {Array<Array<Number>>} PixelChannel
+ */
+
+/**
+ * @typedef {Array<Number>} PixelValues
+ */
+
+/**
+ * @typedef {Array<PixelValues>} PixelLine
+ */
+
+/**
+ * @typedef {Array<PixelLine>} PixelMatrix
+ */
+
 class Image {
     #type;
     #width;

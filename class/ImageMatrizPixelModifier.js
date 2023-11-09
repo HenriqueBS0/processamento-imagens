@@ -2,9 +2,9 @@ class ImageMatrizPixelModifier {
 
     /**
      *
-     * @param {Array<Array<Array<Number>>>} pixelMatrix
+     * @param {import('./Image').PixelMatrix} pixelMatrix
      * @param {function(Array<Number>): Array<Number>} callback
-     * @returns {Array<Array<Array<Number>>>}
+     * @returns {import('./Image').PixelMatrix}
      */
     static modify(pixelMatrix, callback) {
         return pixelMatrix.map(line => line.map(callback));
@@ -12,8 +12,8 @@ class ImageMatrizPixelModifier {
 
     /**
       *
-      * @param {Array<Array<Array<Number>>>} pixelMatrix
-      * @returns {Array<Array<Array<Number>>>}
+      * @param {import('./Image').PixelMatrix} pixelMatrix
+      * @returns {import('./Image').PixelMatrix}
       */
     static average(pixelMatrix) {
         return this.modify(

@@ -63,7 +63,7 @@ class ImageCreatorByContent {
      * @param {Number} width
      * @param {Number} height
      * @param {Number} valuesPerPixel
-     * @returns {Array<Array<Number>>}
+     * @returns {import('./Image').PixelMatrix}
      */
     static #getPixelData(content, width, height, valuesPerPixel) {
         const contentReverse = content.slice().reverse();

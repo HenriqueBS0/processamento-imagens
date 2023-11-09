@@ -12,7 +12,7 @@ class ImageResizer {
     static resize(image, width, height) {
 
         /**
-         * @type {Array<Array<Array<Number>>>}
+         * @type {import('./Image').PixelMatrix}
          */
         let pixelMatrix = JSON.parse(JSON.stringify(image.getPixelMatrix()));
 
@@ -23,7 +23,7 @@ class ImageResizer {
     }
 
     /**
-     * @param {Array<Array<Array<Number>>>} matriz
+     * @param {import('./Image').PixelMatrix} matriz
      * @param {Number} currentWidth
      * @param {Number} currentHeight
      * @param {Number} targetWidth
@@ -105,7 +105,7 @@ class ImageResizer {
     }
 
     /**
-     * @param {Array<Array<Array<Number>>>} array
+     * @param {import('./Image').PixelMatrix} array
      * @param {Number} proportionToOne
      * @returns {Array<Array<Array<<Number>>>}
      */

@@ -1,5 +1,7 @@
 const Image = require("./Image");
 const ImageColorChannelSeparator = require("./ImageColorChannelSeparator");
+const ImageIntensityManipulator = require("./ImageIntensityManipulator");
+const ImageType = require("./ImageType");
 const repeat = require('./helpers/repeat');
 
 class ImageCompression {
@@ -9,14 +11,10 @@ class ImageCompression {
      * @returns {Image}
      */
     static decompress(compressedString) {
-        const compressedArray = compressedString.split(' ');
-        const width = parseInt(compressedArray[0]);
-        const height = parseInt(compressedArray[1]);
-
-        /**
-         * @type {Array<String>}
-         */
-        const compressedPixels = compressedArray.slice(2);
+        const compressedArray = compressedString.split(',');
+        const width = Number(compressedArray.at(0));
+        const height = Number(compressedArray.at(1));
+        const compressedArrayPixels = compressedArray.slice(2);
 
         /**
          * @type {import("./ImageColorChannelSeparator").ColorChannels}
@@ -24,50 +22,60 @@ class ImageCompression {
         const colorChannels = {
             red: [],
             green: [],
-            blue: []
-        };
-
-
-        let remainingElements = 0;
-        let currentColor = 'red';
-        let line = 0;
-
-        const getFirstNumber = str => Number((str.match(/\d+/) || [0])[0]);
-
-        /**
-         * @param {*} inputString 
-         * @returns {Array<Number>}
-         */
-        const extractArrayFromString = (inputString) => {
-            const match = inputString.match(/\(([^)]+)\)/); // Encontra o que estiver entre parênteses
-            return match[1].split(',').map(Number);
+            blue: [],
         }
 
+        let color = 'red';
+        const getColor = currentColor => currentColor === 'green' ? 'blue' : (currentColor === 'red' ? 'green' : 'red');
 
-        for (const value of compressedPixels) {
-            remainingElements -= getFirstNumber(value);
-            // const elements = getFirstNumber(value);
-            // remainingElements -= elements;
+        let valuesChannel = [];
 
-            // if(!colorChannels[currentColor][line]) {
-            //     colorChannels[currentColor][line] = [];
-            // }
+        for (let index = 0; index < compressedArrayPixels.length; index++) {
+            const element = compressedArrayPixels[index];
+            const differentValues =  element.startsWith('-');
+            const counter = Math.abs(element);
 
-            // if(value.startsWith('-')) {
-            //     extractArrayFromString(value).forEach(e => colorChannels[currentColor][line].push((e)));
-            // }
-            // else {
-            //     repeat(() => colorChannels[currentColor][line].push(extractArrayFromString(value)[0]), elements);
-            // }
+            if(differentValues) {
+                repeat(() => {
+                    index++;
+                    valuesChannel.push(Number(compressedArrayPixels[index]));
+                }, counter);
+            }
+            else {
+                index++;
+                repeat(() => valuesChannel.push(Number(compressedArrayPixels[index])), counter);
+            }
 
-            // if(remainingElements === 0) {
-            //     currentColor = currentColor === 'red' ? 'green' : (currentColor === 'green' ? 'blue' : 'red');
-            //     line = currentColor === 'red' ? line + 1 : line; 
-            //     remainingElements = width;
-            // }
+            if(valuesChannel.length === width) {
+                colorChannels[color].push(valuesChannel.slice());
+                valuesChannel = [];
+                color = getColor(color);
+            }
         }
 
-        console.log(colorChannels);
+        const pixelMatrix = [];
+
+        repeat(line => {
+            pixelMatrix.push([]);
+
+            repeat(pixelIndex => {
+                pixelMatrix[line].push([
+                    colorChannels.red[line][pixelIndex],
+                    colorChannels.green[line][pixelIndex],
+                    colorChannels.blue[line][pixelIndex],
+                ]);
+
+            }, width);
+
+        }, height);
+
+        return Image.buildFromData(
+            ImageType.PPM,
+            width,
+            height,
+            ImageIntensityManipulator.getIntensityFromPixelMatrix(pixelMatrix),
+            pixelMatrix
+        );
     }
 
     /**
