@@ -1,10 +1,19 @@
 const Image = require("./Image");
+const ImageMatrizPixelModifier = require("./ImageMatrizPixelModifier");
+const ImageType = require("./ImageType");
 
 /**
  * @typedef {Object} ColorChannels
  * @property {{import('./Image').PixelChannel}} red
  * @property {{import('./Image').PixelChannel}} green
  * @property {{import('./Image').PixelChannel}} blue
+ */
+
+/**
+ * @typedef {Object} ImageSeparate
+ * @property {Image} red
+ * @property {Image} green
+ * @property {Image} blue
  */
 
 class ImageColorChannelSeparator {
@@ -36,6 +45,35 @@ class ImageColorChannelSeparator {
         });
 
         return colorChannels;
+    }
+
+    /**
+     * @param {Image} image 
+     * @param {boolean} minimal 
+     * @returns {ImageSeparate}
+     */
+    static getImages(image, minimal) {
+        const valueReplacement = minimal ? 0 : image.getIntensity();
+        
+        const pixelMatrix = image.getPixelMatrix();
+        
+        const pixelMatrixRed = ImageMatrizPixelModifier.modify(pixelMatrix, pixelValues => {
+            return [pixelValues[0], valueReplacement, valueReplacement];
+        });
+
+        const pixelMatrixGreen = ImageMatrizPixelModifier.modify(pixelMatrix, pixelValues => {
+            return [valueReplacement, pixelValues[1], valueReplacement];
+        });
+
+        const pixelMatrixBlue = ImageMatrizPixelModifier.modify(pixelMatrix, pixelValues => {
+            return [valueReplacement, valueReplacement, pixelValues[2]];
+        });
+
+        return {
+            red: Image.buildFromData(ImageType.PPM, image.getWidth(), image.getHeight(), image.getIntensity(), pixelMatrixRed),
+            green: Image.buildFromData(ImageType.PPM, image.getWidth(), image.getHeight(), image.getIntensity(), pixelMatrixGreen),
+            blue: Image.buildFromData(ImageType.PPM, image.getWidth(), image.getHeight(), image.getIntensity(), pixelMatrixBlue)
+        };
     }
 }
 

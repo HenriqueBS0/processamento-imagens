@@ -124,7 +124,7 @@ class Image {
      * @returns {Array<Array<Array<Number>>>}
      */
     getPixelMatrix() {
-        return this.#pixelMatrix;
+        return this.#pixelMatrix.slice();
     }
 
     /**

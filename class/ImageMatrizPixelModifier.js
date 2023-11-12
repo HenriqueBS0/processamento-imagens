@@ -3,7 +3,7 @@ class ImageMatrizPixelModifier {
     /**
      *
      * @param {import('./Image').PixelMatrix} pixelMatrix
-     * @param {function(Array<Number>): Array<Number>} callback
+     * @param {function(import('./Image).PixelValues')): import('./Image).PixelValues')} callback
      * @returns {import('./Image').PixelMatrix}
      */
     static modify(pixelMatrix, callback) {
