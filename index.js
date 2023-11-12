@@ -1,16 +1,24 @@
 const fs = require('fs');
 const ImageCreatorByContent = require('./class/ImageCreatorByContent');
-const ImageColorChannelSeparator = require('./class/ImageColorChannelSeparator');
+const ImageHistogramManipulator = require('./class/ImageHistogramManipulator');
+const repeat = require('./class/helpers/repeat');
 
-const image = ImageCreatorByContent.getImage(fs.readFileSync('./img/Fig1.ppm', 'utf-8'));
+const cinza = ImageCreatorByContent.getImage(fs.readFileSync('./img/EntradaEscalaCinza.pgm', 'utf-8'));
+const colorida = ImageCreatorByContent.getImage(fs.readFileSync('./img/EntradaRGB.ppm', 'utf-8'));
 
-const minimalImages = ImageColorChannelSeparator.getImages(image, true);
-const maximumImages = ImageColorChannelSeparator.getImages(image, false);
+fs.writeFileSync('./img/data-histogram/data-cinza.csv', ImageHistogramManipulator.getOrderedPixelValues(cinza).join('\n'));
 
-fs.writeFileSync('./img/color-channel-separator/min-r.ppm', minimalImages.red.getContent());
-fs.writeFileSync('./img/color-channel-separator/min-g.ppm', minimalImages.green.getContent());
-fs.writeFileSync('./img/color-channel-separator/min-b.ppm', minimalImages.blue.getContent());
+const dataColorida = ImageHistogramManipulator.getOrderedPixelValuesRGB(colorida);
 
-fs.writeFileSync('./img/color-channel-separator/max-r.ppm', maximumImages.red.getContent());
-fs.writeFileSync('./img/color-channel-separator/max-g.ppm', maximumImages.green.getContent());
-fs.writeFileSync('./img/color-channel-separator/max-b.ppm', maximumImages.blue.getContent());
+const arrayColorida = [];
+
+repeat(
+    i => arrayColorida.push(`${dataColorida.red[i]},${dataColorida.green[i]},${dataColorida.blue[i]}`), 
+    colorida.getWidth() * colorida.getHeight()
+);
+
+
+fs.writeFileSync(
+    './img/data-histogram/data-colorida.csv', 
+    arrayColorida.join('\n')
+);
