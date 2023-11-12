@@ -1,5 +1,6 @@
 const Image = require("./Image");
-const ImageMatrizPixelModifier = require("./ImageMatrizPixelModifier");
+const ImageColorChannelSeparator = require("./ImageColorChannelSeparator");
+const ImageType = require("./ImageType");
 
 class ImageHistogramManipulator {
 
@@ -40,6 +41,70 @@ class ImageHistogramManipulator {
             green: pixels[1].sort((a,b) => a-b),
             blue: pixels[2].sort((a,b) => a-b),
         }
+    }
+
+    /**
+     * @param {Image} image
+     * @returns {Image} 
+     */
+    static highlighting(image) {
+        return image.getType() === ImageType.PPM
+            ? this.#highlightingRGB(image)
+            : this.#highlightingGray(image);
+    }
+
+    /**
+     * @param {Image} image
+     * @returns {Image} 
+     */
+    static #highlightingGray(image) {
+        const channel = image.getPixelMatrix().map(line => line.map(pixelValues => pixelValues[0]));
+        const highlightingChanel = this.#highlightingChanel(image.getIntensity(), channel);
+        const pixelMatrix = highlightingChanel.map(line => line.map(pixelValue => [pixelValue]));
+
+        return Image.buildFromData(image.getType(), image.getWidth(), image.getHeight(), image.getIntensity(), pixelMatrix);
+    }
+
+    /**
+     * @param {Image} image
+     * @returns {Image} 
+     */
+    static #highlightingRGB(image) {
+        const colorChannels = ImageColorChannelSeparator.separate(image);
+
+        colorChannels.red = this.#highlightingChanel(image.getIntensity(), colorChannels.red);
+        colorChannels.green = this.#highlightingChanel(image.getIntensity(), colorChannels.green);
+        colorChannels.blue = this.#highlightingChanel(image.getIntensity(), colorChannels.blue);
+
+        const pixelMatrix = ImageColorChannelSeparator.join(colorChannels);
+
+        return Image.buildFromData(image.getType(), image.getWidth(), image.getHeight(), image.getIntensity(), pixelMatrix);
+    }
+
+    /**
+     * @param {Number} intensity 
+     * @param {import("./Image").PixelChannel} channel 
+     * @returns {import("./Image").PixelChannel}
+     */
+    static #highlightingChanel(intensity, channel) {
+        let min = channel[0][0];
+        let max = channel[0][0];
+
+        channel.forEach(line => {
+            line.forEach(pixelValue => {
+                if(pixelValue > max) {
+                    max = pixelValue;
+                }
+                if(pixelValue < min) {
+                    min = pixelValue;
+                }
+            });
+        });
+
+        const a = Math.round(intensity/(max-min));
+        const b = -(a*min);
+
+        return channel.map(line => line.map(pixelValue => (a * pixelValue) + b));
     }
 
 }

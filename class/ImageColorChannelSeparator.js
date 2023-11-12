@@ -4,9 +4,9 @@ const ImageType = require("./ImageType");
 
 /**
  * @typedef {Object} ColorChannels
- * @property {{import('./Image').PixelChannel}} red
- * @property {{import('./Image').PixelChannel}} green
- * @property {{import('./Image').PixelChannel}} blue
+ * @property {import('./Image').PixelChannel} red
+ * @property {import('./Image').PixelChannel} green
+ * @property {import('./Image').PixelChannel} blue
  */
 
 /**
@@ -45,6 +45,28 @@ class ImageColorChannelSeparator {
         });
 
         return colorChannels;
+    }
+
+    /**
+     * @param {ColorChannels} colorChannels 
+     * @returns {import("./Image").PixelMatrix}
+     */
+    static join(colorChannels) {
+        const pixelMatrix = [];
+
+        colorChannels.red.forEach((line, indexLine) => {
+            pixelMatrix.push([]);
+            
+            line.forEach((_, index) => {
+                pixelMatrix[indexLine].push([
+                    colorChannels.red[indexLine][index],
+                    colorChannels.green[indexLine][index],
+                    colorChannels.blue[indexLine][index],
+                ]);
+            });
+        });
+
+        return pixelMatrix;
     }
 
     /**
