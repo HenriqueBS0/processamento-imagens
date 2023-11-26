@@ -2,11 +2,16 @@ const fs = require('fs');
 const ImageCreatorByContent = require('./class/ImageCreatorByContent');
 const ImageHistogramManipulator = require('./class/ImageHistogramManipulator');
 
-const gray = ImageCreatorByContent.getImage(fs.readFileSync('./img/EntradaEscalaCinza.pgm', 'utf-8'));
-const rgb = ImageCreatorByContent.getImage(fs.readFileSync('./img/EntradaRGB.ppm', 'utf-8'));
+const execute = async () => {
+    const image1 = await ImageCreatorByContent.getFromTiff(fs.readFileSync('./img/Fig0316(1)(top_left).tif'));
+    const image2 = await ImageCreatorByContent.getFromTiff(fs.readFileSync('./img/Fig0316(2)(2nd_from_top).tif'));
+    const image3 = await ImageCreatorByContent.getFromTiff(fs.readFileSync('./img/Fig0316(3)(third_from_top).tif'));
+    const image4 = await ImageCreatorByContent.getFromTiff(fs.readFileSync('./img/Fig0316(4)(bottom_left).tif'));
 
-const highlightingGray = ImageHistogramManipulator.highlighting(gray);
-const highlightingRgb = ImageHistogramManipulator.highlighting(rgb);
+    fs.writeFileSync('./img/histogram-equalization/fig1.pgm', ImageHistogramManipulator.equalize(image1).getContent());
+    fs.writeFileSync('./img/histogram-equalization/fig2.pgm', ImageHistogramManipulator.equalize(image2).getContent());
+    fs.writeFileSync('./img/histogram-equalization/fig3.pgm', ImageHistogramManipulator.equalize(image3).getContent());
+    fs.writeFileSync('./img/histogram-equalization/fig4.pgm', ImageHistogramManipulator.equalize(image4).getContent());
+};
 
-fs.writeFileSync('./img/highlighting-by-histogram/gray.pgm', highlightingGray.getContent());
-fs.writeFileSync('./img/highlighting-by-histogram/rgb.ppm', highlightingRgb.getContent());
+execute();

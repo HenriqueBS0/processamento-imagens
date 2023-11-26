@@ -107,6 +107,70 @@ class ImageHistogramManipulator {
         return channel.map(line => line.map(pixelValue => (a * pixelValue) + b));
     }
 
+    /**
+     * @param {Image} image
+     * @returns {Image} 
+     */
+    static equalize(image) {
+        return image.getType() === ImageType.PPM
+            ? this.#equalizeRBG(image)
+            : this.#equalizeGray(image);
+    }
+
+    /**
+     * @param {Image} image
+     * @returns {Image} 
+     */
+    static #equalizeGray(image) {
+        const channel = image.getPixelMatrix().map(line => line.map(pixelValues => pixelValues[0]));
+        const equalizeChanel = this.#equalizeChanel(image, channel);
+        const pixelMatrix = equalizeChanel.map(line => line.map(pixelValue => [pixelValue]));
+
+        return Image.buildFromData(image.getType(), image.getWidth(), image.getHeight(), image.getIntensity(), pixelMatrix);
+    }
+
+    /**
+     * @param {Image} image
+     * @returns {Image} 
+     */
+    static #equalizeRBG(image) {
+        const colorChannels = ImageColorChannelSeparator.separate(image);
+
+        colorChannels.red = this.#equalizeChanel(image, colorChannels.red);
+        colorChannels.green = this.#equalizeChanel(image, colorChannels.green);
+        colorChannels.blue = this.#equalizeChanel(image, colorChannels.blue);
+
+        const pixelMatrix = ImageColorChannelSeparator.join(colorChannels);
+
+        return Image.buildFromData(image.getType(), image.getWidth(), image.getHeight(), image.getIntensity(), pixelMatrix);
+    }
+
+    /**
+     * @param {Image} image
+     * @param {import("./Image").PixelChannel} channel 
+     * @returns {import("./Image").PixelChannel}
+     */
+    static #equalizeChanel(image, channel) {
+        const mn = image.getHeight() * image.getWidth();
+        const L = image.getIntensity() - 1;
+        const n = Array(image.getIntensity()).fill(0);
+
+
+        channel.forEach(line => {
+            line.forEach(pixelValue => {
+                n[pixelValue]++;
+            });
+        });
+
+        const p = n.map(n => n / mn);
+
+        const s = p.map((_, index) => {
+            return Math.round(p.slice(0, index + 1).reduce((s, p) => (L * p) + s));
+        });
+
+        return channel.map(line => line.map(pixelValue => s[pixelValue]));
+    }
+
 }
 
 module.exports = ImageHistogramManipulator;

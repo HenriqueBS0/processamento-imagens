@@ -17,35 +17,49 @@
  * @enum {ImageType}
  */
 module.exports = class ImageType {
-  /**
-   * Portable Bitmap (PBM)
-   * @const {string}
-   */
-  static get PBM() {
-    return  'P1';
-  }
-  
-  /**
-   * Portable Graymap (PGM)
-   * @const {string}
-   */
-  static get PGM() {
-    return  'P2';
-  }
-  
-  /**
-   * Portable Pixmap (PPM)
-   * @const {string}
-   */
-  static get PPM() {
-    return  'P3';
-  }
+	/**
+	 * Portable Bitmap (PBM)
+	 * @const {string}
+	 */
+	static get PBM() {
+		return 'P1';
+	}
 
-  /**
-   * @param {String} type
-   * @returns {Number}
-   */
-  static getValuesPerPixel(type) {
-    return type === ImageType.PPM ? 3 : 1
-  }
+	/**
+	 * Portable Graymap (PGM)
+	 * @const {string}
+	 */
+	static get PGM() {
+		return 'P2';
+	}
+
+	/**
+	 * Portable Pixmap (PPM)
+	 * @const {string}
+	 */
+	static get PPM() {
+		return 'P3';
+	}
+
+	/**
+	 * @param {string} type
+	 * @returns {string} 
+	 */
+	static getExtension(type) {
+		const oType = {
+			[this.PBM]: 'pbm',
+			[this.PGM]: 'pgm',
+			[this.PPM]: 'ppm',
+		};
+
+		return oType[type];
+	}
+
+	/**
+	 * @param {String} type
+	 * @returns {Number}
+	 */
+	static getValuesPerPixel(type) {
+		return type === ImageType.PPM ? 3 : 1
+	}
 };

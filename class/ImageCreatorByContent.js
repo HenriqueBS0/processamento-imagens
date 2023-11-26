@@ -1,7 +1,37 @@
 const Image = require('./Image');
+const ImageIntensityManipulator = require('./ImageIntensityManipulator');
 const ImageType = require('./ImageType');
 
+const { Image: ImageJS } = require('image-js');
+
 class ImageCreatorByContent {
+
+    /**
+     * @param {String} content
+     * @returns {Image}
+     */
+    static async getFromTiff(content) {
+        const imageTIFF = await ImageJS.load(content);
+
+        const type = imageTIFF.channels === 1 ? ImageType.PGM : ImageType.PPM;
+
+        const pixelMatrix = [];
+        const pixelsArray = imageTIFF.getPixelsArray();
+        let indexValuesPixel = 0;
+
+        for (let indexLine = 1; indexLine <= imageTIFF.height; indexLine++) {
+            const pixelsLine = [];
+
+            for (let pixelValues = 1; pixelValues <= imageTIFF.width; pixelValues++) {
+                pixelsLine.push(pixelsArray[indexValuesPixel].slice().map(Number));
+                indexValuesPixel++;
+            }
+
+            pixelMatrix.push(pixelsLine);
+        }
+
+        return Image.buildFromData(type, imageTIFF.width, imageTIFF.height, ImageIntensityManipulator.getIntensityFromPixelMatrix(pixelMatrix), pixelMatrix);
+    }
 
     /**
      * @param {String} content

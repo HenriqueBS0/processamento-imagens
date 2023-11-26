@@ -133,7 +133,7 @@ class Image {
      * @param {Number} width 
      * @param {Number} height 
      * @param {Number} intensity 
-     * @param {Array<Array<Array<Number>>>} pixelMatrix 
+     * @param {PixelMatrix} pixelMatrix 
      */
     static buildFromData(type, width, height, intensity, pixelMatrix) {
         const content = [];
