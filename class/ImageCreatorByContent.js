@@ -8,7 +8,7 @@ class ImageCreatorByContent {
 
     /**
      * @param {String} content
-     * @returns {Image}
+     * @returns {Promise<Image>}
      */
     static async getFromTiff(content) {
         const imageTIFF = await ImageJS.load(content);

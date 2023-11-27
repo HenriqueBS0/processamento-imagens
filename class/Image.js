@@ -113,7 +113,7 @@ class Image {
     }
 
     getBits() {
-        return Math.log2(this.getIntensity() + 1);
+        return Math.round(Math.log2(this.getIntensity() + 1));
     }
 
     getContent() {

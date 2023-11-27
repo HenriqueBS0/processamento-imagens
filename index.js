@@ -1,13 +1,33 @@
 const fs = require('fs');
 const ImageCreatorByContent = require('./class/ImageCreatorByContent');
-const ImageColorChannelSeparator = require('./class/ImageColorChannelSeparator');
-const ImageOperate = require('./class/ImageOperate');
+const ImageBitPlanner = require('./class/ImageBitPlanner');
 
-const imageA = ImageCreatorByContent.getImage(fs.readFileSync('./img/EntradaRGB.ppm', 'utf-8'));
-const imageB = ImageColorChannelSeparator.getImages(imageA, true).green;
+const execute = async function() {
 
-const additionImage = ImageOperate.addition(imageA, imageB, {column: 0, line: 0});
-const subtractionImage = ImageOperate.subtraction(imageA, imageB, {column: 0, line: 0});
+    const image = await ImageCreatorByContent.getFromTiff(fs.readFileSync('./img/Fig0314(a)(100-dollars).tif'));
 
-fs.writeFileSync('./img/image-operate/additionImage.ppm', additionImage.getContent());
-fs.writeFileSync('./img/image-operate/subtractionImage.ppm', subtractionImage.getContent());
+    ImageBitPlanner.separete(image).forEach((image, planne) => {
+        fs.writeFileSync(`./img/image-bit-planner/dollars-planne-${planne+1}.pbm`, image.getContent());
+    });
+
+    const joinImage = ImageBitPlanner.join([
+        {
+            plane: 8,
+            image: ImageCreatorByContent.getImage(fs.readFileSync('./img/image-bit-planner/dollars-planne-8.pbm', 'utf-8')),
+        },
+
+        {
+            plane: 7,
+            image: ImageCreatorByContent.getImage(fs.readFileSync('./img/image-bit-planner/dollars-planne-7.pbm', 'utf-8')),
+        },
+
+        {
+            plane: 6,
+            image: ImageCreatorByContent.getImage(fs.readFileSync('./img/image-bit-planner/dollars-planne-6.pbm', 'utf-8')),
+        },
+    ]);
+
+    fs.writeFileSync('./img/image-bit-planner/join.pgm', joinImage.getContent());
+};
+
+execute();
